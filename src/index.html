@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= htmlWebpackPlugin.options.title %>
+    </title>
+</head>
+
+<body>
+    <div id="file-controls">
+        <input type="file" id="download-img-input">
+        <label for="download-img-input" class="file-control__btn upload-image-control" title="Добавить изображение">
+            <img src="./assets/img/upload-image-icon.png" alt="upload image" class="file-control__icon">
+        </label>
+        <div class="file-control__btn add-text-control" title="Добавить надпись">
+            <img src="./assets/img/add-text-icon.png" alt="add text" class="file-control__icon">
+        </div>
+        <div class="file-control__btn draw-control" title="Нарисовать">
+            <img src="./assets/img/pen.png" alt="draw" class="file-control__icon">
+        </div>
+        <div class="file-control__btn download-canvas-control" title="Загрузить результат">
+            <img src="./assets/img/download-icon.png" alt="download" class="file-control__icon">
+        </div>
+        <div class="file-control__btn clear-canvas-control" title="Очистить рабочую область">
+            <img src="./assets/img/clear-icon.png" alt="clear" class="file-control__icon">
+        </div>
+    </div>
+
+    <div id="workspace">
+        <canvas class="output-canvas d-none"></canvas>
+        <div class="resize-trigger"></div>
+    </div>
+
+    <div class="open-layers__btn open-modal__btn" title="Слои">
+        <img src="./assets/img/layers-icon.png" alt="open layers" class="open-modal__icon">
+    </div>
+
+    <div id="layers" class="modal">
+        <div class="close-modal-wrapper"><img src="./assets/img/close.png" alt="close"
+                class="close-modal-icon close-layers--btn"></div>
+        <div class="layer-labels-wrapper"></div>
+    </div>
+
+    <div class="open-settings__btn open-modal__btn" title="Настройки">
+        <img src="./assets/img/settings-icon.png" alt="open settings" class="open-modal__icon">
+    </div>
+
+    <div id="img-settings" class="modal">
+        <div class="close-modal-wrapper"><img src="./assets/img/close.png" alt="close"
+                class="close-modal-icon close-img-settings--btn"></div>
+        <div class="settings-wrapper">
+            <button class="settings__btn img-settings__remove-bg-btn">Удалить фон</button>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>-180°</span>
+                    Вращение
+                    <span>180°</span>
+                </p>
+                <input type="range" min="-180" max="180" value="0"
+                    class="img-rotate-input styled-slider slider-progress" step="1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>-89°</span>
+                    Вращение по оси Х
+                    <span>89°</span>
+                </p>
+                <input type="range" min="-89" max="89" value="0" class="img-rotateX-input styled-slider slider-progress"
+                    step="1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>-89°</span>
+                    Вращение по оси Y
+                    <span>89°</span>
+                </p>
+                <input type="range" min="-89" max="89" value="0" class="img-rotateY-input styled-slider slider-progress"
+                    step="1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>0%</span>
+                    Прозрачность
+                    <span>100%</span>
+                </p>
+                <input type="range" min="0" max="1" value="1" class="img-opacity-input styled-slider slider-progress"
+                    step="0.1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>0%</span>
+                    Размытие
+                    <span>100%</span>
+                </p>
+                <input type="range" min="0" max="10" value="0" class="img-blur-input styled-slider slider-progress"
+                    step="1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>0%</span>
+                    Яркость
+                    <span>200%</span>
+                </p>
+                <input type="range" min="0" max="200" value="100"
+                    class="img-brightness-input styled-slider slider-progress" step="1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>0%</span>
+                    Контрастность
+                    <span>200%</span>
+                </p>
+                <input type="range" min="0" max="200" value="100"
+                    class="img-contrast-input styled-slider slider-progress" step="1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>0%</span>
+                    Насыщенность
+                    <span>200%</span>
+                </p>
+                <input type="range" min="0" max="200" value="100"
+                    class="img-saturate-input styled-slider slider-progress" step="1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>0°</span>
+                    Цветовой круг
+                    <span>360°</span>
+                </p>
+                <input type="range" min="0" max="360" value="0" class="img-hue-input styled-slider slider-progress"
+                    step="1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>0%</span>
+                    Инверсия
+                    <span>100%</span>
+                </p>
+                <input type="range" min="0" max="100" value="0" class="img-invert-input styled-slider slider-progress"
+                    step="1">
+            </div>
+            <div class="img-settings-item settings-item">
+                <p class="img-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>0%</span>
+                    Сепия
+                    <span>100%</span>
+                </p>
+                <input type="range" min="0" max="100" value="0" class="img-sepia-input styled-slider slider-progress"
+                    step="1">
+            </div>
+        </div>
+    </div>
+
+    <div id="text-settings" class="modal">
+        <div class="close-modal-wrapper"><img src="./assets/img/close.png" alt="close"
+                class="close-modal-icon close-text-settings--btn">
+        </div>
+        <div class="settings-wrapper">
+            <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
+                <p class="settings-item__title">Шрифт</p>
+                <select class="text-settings__font-family-select">
+                    <option value="Impact" style="font-family: Impact">Impact</option>
+                    <option value="Lobster" style="font-family: Lobster">Lobster</option>
+                    <option value="Streamster" style="font-family: Streamster">Streamster</option>
+                    <option value="Triod Postnaja" style="font-family: Triod Postnaja">Triod</option>
+                    <option value="Comic Sans MS" style="font-family: Comic Sans MS">Comic Sans MS</option>
+                    <option value="Antonella script X" style="font-family: Antonella script X">Antonella script X
+                    </option>
+                    <option value="Times New Roman" style="font-family: Times New Roman">Times New Roman</option>
+                    <option value="Calibri" style="font-family: Calibri">Calibri</option>
+                    <option value="Segoe UI" style="font-family: Segoe UI">Segoe UI</option>
+                </select>
+            </div>
+            <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
+                <p class="settings-item__title">Размер</p>
+                <select class="text-settings__font-size-select">
+                    <option value="8">8</option>
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                    <option value="18">18</option>
+                    <option value="24">24</option>
+                    <option value="32">32</option>
+                    <option value="44">44</option>
+                    <option value="52">52</option>
+                    <option value="52">52</option>
+                    <option value="58">58</option>
+                    <option value="64" selected>64</option>
+                    <option value="72">72</option>
+                </select>
+            </div>
+            <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
+                <p class="settings-item__title">Цвет</p>
+                <input type="color" class="text-settings__color-input" value="#ffffff">
+            </div>
+            <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
+                <p class="settings-item__title">Обводка</p>
+                <div class="text-settings-input-group d-flex ai-center">
+                    <input type="checkbox" id="text-settings__stroke-checkbox" checked>
+                    <label for="text-settings__stroke-checkbox"></label>
+                    <input type="color" class="text-settings__stroke-color-input">
+                </div>
+            </div>
+            <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
+                <p class="settings-item__title">Фон</p>
+                <div class="text-settings-input-group d-flex ai-center">
+                    <input type="checkbox" id="text-settings__background-checkbox">
+                    <label for="text-settings__background-checkbox"></label>
+                    <input type="color" class="text-settings__background-color-input" disabled>
+                </div>
+            </div>
+            <div class="text-settings-item settings-item">
+                <p class="text-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>-180°</span>
+                    Вращение
+                    <span>180°</span>
+                </p>
+                <input type="range" min="-180" max="180" value="0"
+                    class="text-rotate-input styled-slider slider-progress" step="1">
+            </div>
+
+        </div>
+    </div>
+    <script>
+        import "./assets/img/upload-image-icon.png";
+        import "./assets/img/add-text-icon.png";
+        import "./assets/img/download-icon.png";
+        import "./assets/img/clear-icon.png";
+        import "./assets/img/layers-icon.png";
+        import "./assets/img/settings-icon.png";
+        import "./assets/img/pen.png";
+        import "./assets/img/close.png";
+    </script>
+</body>
+
+</html>
