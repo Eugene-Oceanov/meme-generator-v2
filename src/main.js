@@ -2,8 +2,16 @@ import "normalize.css";
 import "./assets/css/style.css";
 import "./assets/css/fonts.css";
 import "./assets/css/range.css";
-import { moveElement, resizeElement, downloadCanvas, imgStylization, textStylization } from "./js/library.js";
-import { imgOutputItem, textOutputItem, layerItemLayout } from "./js/layouts.js";
+import "./assets/img/upload-image-icon.png";
+import "./assets/img/add-text-icon.png";
+import "./assets/img/download-icon.png";
+import "./assets/img/clear-icon.png";
+import "./assets/img/layers-icon.png";
+import "./assets/img/settings-icon.png";
+import "./assets/img/pen.png";
+import "./assets/img/close.png";
+import { moveElement, resizeElement, downloadCanvas, imgStylization, textStylization, sortLayersDnD } from "./js/library.js";
+import { imgOutputItem, textOutputItem, layerLabelLayout } from "./js/layouts.js";
 
 const workspace = document.querySelector("#workspace"),
     canvas = document.querySelector(".output-canvas"),
@@ -16,7 +24,7 @@ const workspace = document.querySelector("#workspace"),
     imgSettings = document.querySelector("#img-settings"),
     textSettings = document.querySelector("#text-settings"),
     layerLabelsWrapper = document.querySelector(".layer-labels-wrapper"),
-    layers = [];
+    layers = new Array();
 let zCounter = 0,
     currentLayer;
 
@@ -41,11 +49,11 @@ document.querySelector(".close-text-settings--btn").addEventListener("click", ()
 
 uploadImgInput.addEventListener("input", e => {
     zCounter++;
-    currentLayer = null;
     const file = uploadImgInput.files[0];
     if (file) {
-        const imgOutput = imgOutputItem(zCounter)
-        currentLayer = imgOutput;
+        const imgOutput = imgOutputItem(zCounter);
+        const imgLabel = layerLabelLayout(zCounter, file.name);
+        currentLayer = imgOutput.node;
         imgStylization(currentLayer,
             document.querySelector(".img-rotate-input"),
             document.querySelector(".img-rotateX-input"),
@@ -57,18 +65,19 @@ uploadImgInput.addEventListener("input", e => {
             document.querySelector(".img-saturate-input"),
             document.querySelector(".img-hue-input"),
             document.querySelector(".img-invert-input"),
-            document.querySelector(".img-sepia-input"))
-        layerLabelsWrapper.append(layerItemLayout(zCounter, file.name));
-        imgOutput.src = URL.createObjectURL(file);
-        workspace.append(imgOutput);
-        moveElement(imgOutput, workspace);
-        layers.push({ id: zCounter, node: imgOutput });
+            document.querySelector(".img-sepia-input"));
+        layerLabelsWrapper.append(imgLabel);
+        imgOutput.node.src = URL.createObjectURL(file);
+        workspace.append(imgOutput.node);
+        moveElement(imgOutput.node, workspace);
+        layers.push(imgLabel);
     }
 })
 
 addTextBtn.addEventListener("click", () => {
     zCounter++;
     const textOutput = textOutputItem(zCounter);
+    const textLabel = layerLabelLayout(zCounter, `Надпись #${zCounter}`);
     currentLayer = textOutput;
     textStylization(currentLayer,
         document.querySelector(".text-settings__font-family-select"),
@@ -79,10 +88,14 @@ addTextBtn.addEventListener("click", () => {
         document.querySelector("#text-settings__background-checkbox"),
         document.querySelector(".text-settings__background-color-input"),
         document.querySelector(".text-rotate-input"))
+    layerLabelsWrapper.append(textLabel);
     workspace.append(currentLayer);
     moveElement(textOutput, workspace);
-    layers.push({ id: zCounter, node: textOutput });
+    layers.push(textLabel);
+    console.log(layers)
 })
+
+sortLayersDnD(layerLabelsWrapper, layers);
 
 downloadCanvasBtn.addEventListener("click", () => downloadCanvas(workspace, canvas));
 

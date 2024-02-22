@@ -123,3 +123,37 @@ export function textStylization(text,
     });
     rotateInput.addEventListener("input", () => text.style.transform = `rotate(${rotateInput.value}deg)`);
 }
+
+export function sortLayersDnD(labelsWrapper, labelsArr) {
+    let dragged,
+        dragOvered;
+
+    labelsWrapper.addEventListener("drag", e => {
+        e.preventDefault();
+        dragged = e.target;
+    });
+
+    labelsWrapper.addEventListener("dragover", e => {
+        e.preventDefault();
+        dragOvered = e.target;
+        dragOvered.style.marginTop = "10px";
+    });
+
+    labelsWrapper.addEventListener("dragleave", e => {
+        e.preventDefault();
+        dragOvered.style.marginTop = "2px";
+    });
+
+    labelsWrapper.addEventListener("drop", (e) => {
+        e.preventDefault();
+        labelsArr.splice(parseInt(dragged.dataset.layer) - 1, 1);
+        labelsArr.splice(parseInt(dragOvered.dataset.layer) - 1, 0, dragged);
+        labelsWrapper.innerHTML = "";
+        labelsArr.forEach(item => {
+            item.dataset.layer = labelsArr.indexOf(item) + 1;
+            labelsWrapper.append(item);
+            document.getElementById(item.getAttribute("for")).style.zIndex = item.dataset.layer;
+            item.style.marginTop = "2px";
+        });
+    })
+}
