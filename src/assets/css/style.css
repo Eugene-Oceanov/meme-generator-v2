@@ -181,13 +181,14 @@ input[type="checkbox"]:checked+label:before {
     font-family: "Impact";
     font-size: 44px;
     -webkit-text-stroke: 2px #000;
+    text-stroke: 2px #000;
     color: #fff;
     padding: 5px;
     border-radius: 5px;
 }
 
-.img-output {
-    height: 100%;
+.img-output-wrapper {
+    opacity: 0;
 }
 
 /* workspace end */
@@ -251,15 +252,13 @@ input[type="checkbox"]:checked+label:before {
 
 .layer-label {
     display: block;
+    margin-top: 2px;
     padding: 7px;
     color: #fff;
     background: var(--albostblack);
     border: 2px solid var(--almostwhite);
     cursor: pointer;
-}
-
-.layer-label+.layer-label {
-    margin-top: 2px;
+    transition: .1s;
 }
 
 /* layers end */

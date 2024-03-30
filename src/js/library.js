@@ -1,4 +1,5 @@
 const html2canvas = require("html2canvas");
+
 export function moveElement(element, parent) {
     let active = false,
         currentX,
@@ -9,7 +10,7 @@ export function moveElement(element, parent) {
         active = true;
         initX = e.clientX - element.getBoundingClientRect().left;
         initY = e.clientY - element.getBoundingClientRect().top;
-        document.addEventListener("mousemove", moveHandler)
+        document.addEventListener("mousemove", moveHandler);
     })
     function moveHandler(e) {
         if (active) {
@@ -26,12 +27,12 @@ export function moveElement(element, parent) {
     });
 }
 
-export function resizeElement(element, trigger) {
+export function resizeElement(element, trigger, inner) {
     let elementRect = element.getBoundingClientRect(),
         active = false;
     trigger.addEventListener("mousedown", (e) => {
         active = true;
-        document.addEventListener("mousemove", resizeHandler)
+        document.addEventListener("mousemove", resizeHandler);
     })
     function resizeHandler(e) {
         if (active) {
@@ -40,10 +41,14 @@ export function resizeElement(element, trigger) {
             let currentHeight = e.clientY - elementRect.y;
             element.style.width = `${currentWidth}px`;
             element.style.height = `${currentHeight}px`;
+            if (inner) {
+                inner.style.width = "100%";
+                inner.style.height = "100%";
+            }
         }
     }
     document.addEventListener("mouseup", () => {
-        active = false
+        active = false;
         document.removeEventListener("mousemove", resizeHandler);
     });
 }
@@ -62,31 +67,29 @@ export function downloadCanvas(wrapper, outputCanvas) {
 }
 
 export function imgStylization(img,
-    rotateInput,
-    rotateXinput,
-    rotateYinput,
-    opacityInput,
-    blurInput,
-    brightnessInput,
-    contrastInput,
-    saturateInput,
-    colorCircleInput,
-    inversionInput,
-    sepiaInput) {
+    scaleInput, rotateInput,
+    rotateXinput, rotateYinput,
+    opacityInput, blurInput,
+    brightnessInput, contrastInput,
+    saturateInput, colorCircleInput,
+    inversionInput, sepiaInput) {
+    const inputsArr = [scaleInput, rotateInput, rotateXinput, rotateYinput, opacityInput, blurInput, brightnessInput, contrastInput, saturateInput, colorCircleInput, inversionInput, sepiaInput];
     const perspectiveArr = [rotateXinput, rotateYinput];
     const filterArr = [blurInput, brightnessInput, contrastInput, saturateInput, colorCircleInput, inversionInput, sepiaInput];
-    rotateInput.addEventListener("input", () => img.style.rotate = `${rotateInput.value}deg`);
+    scaleInput.addEventListener("input", () => img.output.style.transform = `scale(${scaleInput.value})`);
+    rotateInput.addEventListener("input", () => img.output.style.rotate = `${rotateInput.value}deg`);
     perspectiveArr.forEach(item => {
         item.addEventListener("input", () => {
-            img.style.transform = `perspective(600px) rotateX(${rotateXinput.value}deg) rotateY(${rotateYinput.value}deg)`
+            img.output.style.transform = `perspective(600px) rotateX(${rotateXinput.value}deg) rotateY(${rotateYinput.value}deg)`;
         })
     })
-    opacityInput.addEventListener("input", () => img.style.opacity = opacityInput.value);
+    opacityInput.addEventListener("input", () => img.output.style.opacity = opacityInput.value);
     filterArr.forEach(item => {
         item.addEventListener("input", () => {
-            img.style.filter = `blur(${blurInput.value}px) brightness(${brightnessInput.value}%) contrast(${contrastInput.value}%) saturate(${saturateInput.value}%) hue-rotate(${colorCircleInput.value}deg) invert(${inversionInput.value}%) sepia(${sepiaInput.value}%)`;
+            img.output.style.filter = `blur(${blurInput.value}px) brightness(${brightnessInput.value}%) contrast(${contrastInput.value}%) saturate(${saturateInput.value}%) hue-rotate(${colorCircleInput.value}deg) invert(${inversionInput.value}%) sepia(${sepiaInput.value}%)`;
         })
     })
+    inputsArr.forEach(item => item.addEventListener("input", () => img.styleValues[item.id] = +item.value))
 }
 
 export function textStylization(text,
@@ -98,33 +101,36 @@ export function textStylization(text,
     backgroundCheckbox,
     backgroundColorInput,
     rotateInput) {
-    fontFamilySelect.addEventListener("change", () => text.style.fontFamily = fontFamilySelect.value);
-    fontSizeSelect.addEventListener("change", () => text.style.fontSize = `${fontSizeSelect.value}px`);
-    colorInput.addEventListener("input", () => text.style.color = colorInput.value);
+    fontFamilySelect.addEventListener("change", () => {
+        text.output.style.fontFamily = fontFamilySelect.value;
+        
+    })
+    fontSizeSelect.addEventListener("change", () => text.output.style.fontSize = `${fontSizeSelect.value}px`);
+    colorInput.addEventListener("input", () => text.output.style.color = colorInput.value);
     strokeCheckbox.addEventListener("change", () => {
         if (!strokeCheckbox.checked) {
             strokeColorInput.setAttribute("disabled", "true");
-            text.style.webkitTextStroke = `0px ${strokeColorInput.value}`;
+            text.output.style.webkitTextStroke = `0px ${strokeColorInput.value}`;
         } else {
             strokeColorInput.removeAttribute("disabled");
-            text.style.webkitTextStroke = `2px ${strokeColorInput.value}`;
+            text.output.style.webkitTextStroke = `2px ${strokeColorInput.value}`;
         }
     });
-    strokeColorInput.addEventListener("input", () => text.style.webkitTextStroke = `2px ${strokeColorInput.value}`);
+    strokeColorInput.addEventListener("input", () => text.output.style.webkitTextStroke = `2px ${strokeColorInput.value}`);
     backgroundCheckbox.addEventListener("change", () => {
         if (!backgroundCheckbox.checked) {
             backgroundColorInput.setAttribute("disabled", "true");
-            text.style.background = "none";
+            text.output.style.background = "none";
         } else {
             backgroundColorInput.removeAttribute("disabled");
-            text.style.background = backgroundColorInput.value;
+            text.output.style.background = backgroundColorInput.value;
         }
-        backgroundColorInput.addEventListener("input", () => text.style.background = backgroundColorInput.value)
+        backgroundColorInput.addEventListener("input", () => text.output.style.background = backgroundColorInput.value);
     });
-    rotateInput.addEventListener("input", () => text.style.transform = `rotate(${rotateInput.value}deg)`);
+    rotateInput.addEventListener("input", () => text.output.style.transform = `rotate(${rotateInput.value}deg)`);
 }
 
-export function sortLayersDnD(labelsWrapper, labelsArr) {
+export function sortLayersDnD(labelsWrapper, layersArr) {
     let dragged,
         dragOvered;
 
@@ -132,28 +138,34 @@ export function sortLayersDnD(labelsWrapper, labelsArr) {
         e.preventDefault();
         dragged = e.target;
     });
-
+    
     labelsWrapper.addEventListener("dragover", e => {
         e.preventDefault();
         dragOvered = e.target;
-        dragOvered.style.marginTop = "10px";
+        if (dragged != dragOvered) dragOvered.style.marginTop = "10px";
     });
-
+    
     labelsWrapper.addEventListener("dragleave", e => {
         e.preventDefault();
         dragOvered.style.marginTop = "2px";
     });
-
+    
     labelsWrapper.addEventListener("drop", (e) => {
         e.preventDefault();
-        labelsArr.splice(parseInt(dragged.dataset.layer) - 1, 1);
-        labelsArr.splice(parseInt(dragOvered.dataset.layer) - 1, 0, dragged);
+        let draggedIndex = layersArr.findIndex(item => item.label === dragged),
+            dragOveredIndex = layersArr.findIndex(item => item.label === dragOvered),
+            draggedImg = { ...layersArr[draggedIndex] };
+        layersArr.splice(draggedIndex, 1);
+        layersArr.splice(dragOveredIndex, 0, draggedImg);
         labelsWrapper.innerHTML = "";
-        labelsArr.forEach(item => {
-            item.dataset.layer = labelsArr.indexOf(item) + 1;
-            labelsWrapper.append(item);
-            document.getElementById(item.getAttribute("for")).style.zIndex = item.dataset.layer;
-            item.style.marginTop = "2px";
-        });
+        layersArr.forEach(item => {
+            item.layer = layersArr.indexOf(item) + 1;
+            labelsWrapper.append(item.label);
+            item.output.id = `layer-${layersArr.indexOf(item) + 1}`;
+            item.output.style.zIndex = layersArr.indexOf(item) + 1;
+            item.label.style.marginTop = "2px";
+        })
     })
 }
+
+
