@@ -151,6 +151,27 @@ input[type="checkbox"]:checked+label:before {
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
 }
 
+.preloader-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.preloader {
+    width: 80px;
+    height: 80px;
+    border-style: solid;
+    border-color: #fff transparent #fff transparent;
+    border-width: 8px;
+    border-radius: 50%;
+    animation: load 1s ease infinite;
+}
+
 .output-canvas {
     position: absolute;
     width: 100%;
@@ -175,6 +196,7 @@ input[type="checkbox"]:checked+label:before {
     position: absolute;
     cursor: move;
     user-select: none;
+    /* pointer-events: none;     */
 }
 
 .text-output {
@@ -310,3 +332,9 @@ input[type="checkbox"]:checked+label:before {
 
 /* settings end */
 /* modals end */
+
+@keyframes load {
+    to {
+        rotate: 360deg;
+    }
+}

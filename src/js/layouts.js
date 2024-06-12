@@ -2,6 +2,7 @@ export function getImg(counter, name) {
     const output = document.createElement("IMG");
     output.classList.add("img-output");
     output.setAttribute("id", `layer-${counter}`)
+    output.setAttribute("draggable", false);
     output.style.zIndex = counter;
     return {
         layer: counter,
