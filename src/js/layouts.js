@@ -33,6 +33,7 @@ export function getText(counter) {
     output.textContent = "Введите текст";
     output.style.zIndex = counter;
     output.setAttribute("contenteditable", true);
+    output.setAttribute("spellcheck", false)
     return {
         layer: counter,
         output: output,
@@ -51,9 +52,11 @@ export function getText(counter) {
 
 function getLabel(counter, name) {
     const label = document.createElement("LABEL");
-    label.classList.add("layer-label");
+    label.classList.add("layer-label", `label-${counter}`);
+    label.style.border = "4px solid #fff";
     label.setAttribute("draggable", true);
     label.setAttribute("for", `layer-${counter}`);
+    label.setAttribute("layer-index", counter);
     label.textContent = name;
     return label;
 }

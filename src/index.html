@@ -21,6 +21,9 @@
         <div class="file-control__btn draw-control" title="Нарисовать">
             <img src="./assets/img/pen.png" alt="draw" class="file-control__icon">
         </div>
+        <div class="file-control__btn generate-image-control" title="Сгенерировать изображение">
+            <img src="./assets/img/ai-icon.png" alt="generate image" class="file-control__icon">
+        </div>
         <div class="file-control__btn download-canvas-control" title="Загрузить результат">
             <img src="./assets/img/download-icon.png" alt="download" class="file-control__icon">
         </div>
@@ -175,7 +178,7 @@
         <div class="settings-wrapper">
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Шрифт</p>
-                <select class="text-settings__font-family-select" id="text-font-input">
+                <select class="text-input text-settings__font-family-select" id="text-font-input">
                     <option value="Impact" style="font-family: Impact">Impact</option>
                     <option value="Lobster" style="font-family: Lobster">Lobster</option>
                     <option value="Streamster" style="font-family: Streamster">Streamster</option>
@@ -190,7 +193,7 @@
             </div>
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Размер</p>
-                <select class="text-settings__font-size-select" id="text-font-size-input">
+                <select class="text-input text-settings__font-size-select" id="text-font-size-input">
                     <option value="8">8</option>
                     <option value="12">12</option>
                     <option value="14">14</option>
@@ -207,20 +210,20 @@
             </div>
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Цвет</p>
-                <input type="color" class="text-settings__color-input" id="text-color-input" value="#ffffff">
+                <input type="color" class="text-input text-settings__color-input" id="text-color-input" value="#ffffff">
             </div>
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Обводка</p>
                 <div class="text-settings-input-group d-flex ai-center">
-                    <input type="checkbox" id="text-settings__stroke-checkbox" checked>
+                    <input type="checkbox" id="text-settings__stroke-checkbox" class="text-input" checked>
                     <label for="text-settings__stroke-checkbox"></label>
-                    <input type="color" class="text-settings__stroke-color-input" id="text-stroke-color-input">
+                    <input type="color" class="text-input text-settings__stroke-color-input" id="text-stroke-color-input">
                 </div>
             </div>
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Фон</p>
                 <div class="text-settings-input-group d-flex ai-center">
-                    <input type="checkbox" id="text-settings__background-checkbox">
+                    <input type="checkbox" id="text-input text-settings__background-checkbox">
                     <label for="text-settings__background-checkbox"></label>
                     <input type="color" class="text-settings__background-color-input" id="text-background-input" disabled>
                 </div>
@@ -232,9 +235,17 @@
                     <span>180°</span>
                 </p>
                 <input type="range" min="-180" max="180" value="0"
-                    class="styled-slider slider-progress text-rotate-input" id="text-rotate-input" step="1">
+                    class="text-input styled-slider slider-progress text-rotate-input" id="text-rotate-input" step="1">
             </div>
-
+            <div class="text-settings-item settings-item">
+                <p class="text-settings-item__title settings-item__title d-flex jc-space-between">
+                    <span>-89°</span>
+                    Вращение по оси Х
+                    <span>89°</span>
+                </p>
+                <input type="range" min="-180" max="180" value="0"
+                    class="text-input styled-slider slider-progress text-rotateX-input" id="text-rotate-input" step="1">
+            </div>
         </div>
     </div>
 </body>
