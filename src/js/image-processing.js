@@ -1,6 +1,55 @@
+import { moveElement, getLabel } from "./library.js";
+
 let currentImg,
     filterInputsArr = [...document.querySelectorAll(".filter-input")],
     rotateInputsArr = [...document.querySelectorAll(".img-rotate-input")];
+
+export function getImgOutput(uploadImgInput, layersArr, counter, currentLayer, layerLabelsWrapper, removeBackgroundBtn) {
+    if(currentLayer) currentLayer.label.style.border = "2px solid #fff";
+    const file = uploadImgInput.files[0];
+    if (file) {
+        const img = getImgLayout(counter, file.name);
+        img.output.src = URL.createObjectURL(file);
+        layerLabelsWrapper.append(img.label);
+        workspace.append(img.output);
+        setTimeout(() => { if (img.output.clientWidth > img.output.clientHeight) img.output.style.width = "100%";
+                           else img.output.style.height = "100%"}, 0 );
+        currentLayer = img;
+        updateImgInputListeners(currentLayer, removeBackgroundBtn);
+        for(let key in img.styleValues)  if(img.styleValues.hasOwnProperty(key)) document.getElementById(key).value = img.styleValues[key];
+        moveElement(currentLayer.output, workspace);
+        layersArr.push(img);
+        return img;
+    }
+}
+
+function getImgLayout(counter, name) {
+    const output = document.createElement("IMG");
+    output.classList.add("img-output");
+    output.setAttribute("id", `layer-${counter}`)
+    output.setAttribute("draggable", false);
+    output.style.zIndex = counter;
+    return {
+        layer: counter,
+        output: output,
+        label: getLabel(counter, name),
+        type: "img",
+        styleValues: {
+            "img-scale-input": 1,
+            "img-rotate-input": 0,
+            "img-rotateX-input": 0,
+            "img-rotateY-input": 0,
+            "img-opacity-input": 1,
+            "img-blur-input": 0,
+            "img-brightness-input": 100,
+            "img-contrast-input": 100,
+            "img-saturate-input": 100,
+            "img-hue-input": 0,
+            "img-invert-input": 0,
+            "img-sepia-input": 0
+        }
+    };
+}
 
 export function updateImgInputListeners(img, removeBgBtn) {
     currentImg = img;

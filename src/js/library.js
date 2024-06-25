@@ -53,6 +53,17 @@ export function resizeElement(element, trigger, inner) {
     });
 }
 
+export function getLabel(counter, name) {
+    const label = document.createElement("LABEL");
+    label.classList.add("layer-label", `label-${counter}`);
+    label.style.border = "4px solid #fff";
+    label.setAttribute("draggable", true);
+    label.setAttribute("for", `layer-${counter}`);
+    label.setAttribute("layer-index", counter);
+    label.textContent = name;
+    return label;
+}
+
 export function sortLayersDnD(labelsWrapper, layersArr) {
     let dragged,
         dragOvered;
@@ -124,48 +135,3 @@ export function downloadCanvas(wrapper, outputCanvas) {
         outputCanvas.classList.add("d-none");
     })
 }
-
-// changing text logic start
-export function textStylization(text) {
-    const fontFamilySelect = document.querySelector(".text-settings__font-family-select"),
-        fontSizeSelect = document.querySelector(".text-settings__font-size-select"),
-        colorInput = document.querySelector(".text-settings__color-input"),
-        strokeCheckbox = document.querySelector("#text-settings__stroke-checkbox"),
-        strokeColorInput = document.querySelector(".text-settings__stroke-color-input"),
-        backgroundCheckbox = document.querySelector("#text-settings__background-checkbox"),
-        backgroundColorInput = document.querySelector(".text-settings__background-color-input"),
-        rotateInput = document.querySelector(".text-rotate-input");
-    fontFamilySelect.addEventListener("change", () => text.output.style.fontFamily = fontFamilySelect.value);
-    fontSizeSelect.addEventListener("change", () => text.output.style.fontSize = `${fontSizeSelect.value}px`);
-    colorInput.addEventListener("input", () => text.output.style.color = colorInput.value);
-    strokeCheckbox.addEventListener("change", () => {
-        if (!strokeCheckbox.checked) {
-            strokeColorInput.setAttribute("disabled", "true");
-            text.output.style.webkitTextStroke = `0px ${strokeColorInput.value}`;
-        } else {
-            strokeColorInput.removeAttribute("disabled");
-            text.output.style.webkitTextStroke = `2px ${strokeColorInput.value}`;
-        }
-    });
-    strokeColorInput.addEventListener("input", () => text.output.style.webkitTextStroke = `2px ${strokeColorInput.value}`);
-    backgroundCheckbox.addEventListener("change", () => {
-        if (!backgroundCheckbox.checked) {
-            backgroundColorInput.setAttribute("disabled", "true");
-            text.output.style.background = "none";
-        } else {
-            backgroundColorInput.removeAttribute("disabled");
-            text.output.style.background = backgroundColorInput.value;
-        }
-        backgroundColorInput.addEventListener("input", () => text.output.style.background = backgroundColorInput.value);
-    });
-    rotateInput.addEventListener("input", () => text.output.style.transform = `rotate(${rotateInput.value}deg)`);
-}
-
-function updateTextInputListeners() {
-    const textInputsArr = [...document.querySelector(".text-input")];
-    textInputsArr.forEach(input => {
-        input.removeEventListener("input", updateTextSingleInputs);
-        input.removeEventListener("change", updateTextChangeInputs);
-    })
-}
-// changing text logic end

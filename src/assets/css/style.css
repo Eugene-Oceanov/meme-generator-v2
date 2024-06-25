@@ -196,7 +196,6 @@ input[type="checkbox"]:checked+label:before {
     position: absolute;
     cursor: move;
     user-select: none;
-    /* pointer-events: none;     */
 }
 
 .text-output {
@@ -212,12 +211,41 @@ input[type="checkbox"]:checked+label:before {
 .img-output-wrapper {
     opacity: 0;
 }
-
 /* workspace end */
 
 /* modals start */
-/* modals default start */
-.open-modal__btn {
+#modals-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+.kandinsky-request-modal {
+    width: 400px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 15px;
+}
+
+#kandinsky-prompt-area {
+    width: 100%;
+    height: 70px;
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 7px;
+    resize: none;
+    outline: none;
+}
+/* modals ens */
+
+/* side panels start */
+/* panel default start */
+.open-panel__btn {
     position: absolute;
     width: 50px;
     height: 50px;
@@ -229,11 +257,11 @@ input[type="checkbox"]:checked+label:before {
     cursor: pointer;
 }
 
-.open-modal__icon {
+.open-panel__icon {
     width: 30px;
 }
 
-.modal {
+.panel {
     position: absolute;
     right: -20vw;
     top: 0;
@@ -249,17 +277,17 @@ input[type="checkbox"]:checked+label:before {
     height: 100vh;
 }
 
-.modal--visible {
+.panel--visible {
     right: 0;
 }
 
-.close-modal-wrapper {
+.close-panel-wrapper {
     padding-right: 2px;
     padding-bottom: 3px;
     text-align: right;
 }
 
-.close-modal-icon {
+.close-panel-icon {
     width: 15px;
     cursor: pointer;
 }

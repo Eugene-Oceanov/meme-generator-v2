@@ -77,7 +77,7 @@ async function checkGeneration(url, apiKey, secretKey, requestId, attempts = 10,
 
 
 // html
-{/* <div class="output">
+/* <div class="output">
   <div class="overlay">
     <div class="preloader"></div>
   </div>
@@ -86,7 +86,7 @@ async function checkGeneration(url, apiKey, secretKey, requestId, attempts = 10,
 <div class="form">
   <textarea placeholder="Enter prompt"></textarea>
   <button>Get request</button>
-</div> */}
+</div> */
 
 
 // css
@@ -167,6 +167,11 @@ async function checkGeneration(url, apiKey, secretKey, requestId, attempts = 10,
 
 // js
 
+// const output = document.querySelector(".output"),
+//       overlay = document.querySelector(".overlay"),
+//       textarea = document.querySelector("textarea"),
+//       button = document.querySelector("button");
+
 // async function getModel(url, apiKey, secretKey) {
 //     const response = await fetch(url + 'key/api/v1/models', {
 //         method: 'GET',
@@ -245,8 +250,10 @@ async function checkGeneration(url, apiKey, secretKey, requestId, attempts = 10,
 //     }
 // };
 
-// document.querySelector("button").addEventListener("click", async () => {
-//   // document.querySelector(".output").innerHTML = "";
-//   document.querySelector(".overlay").style.display = "flex";
-//   handler(document.querySelector("textarea").value);
+// button.addEventListener("click", async () => {
+//   if (textarea.value) {
+//     if(output.querySelector("IMG")) output.querySelector("IMG").remove();
+//     overlay.style.display = "flex";
+//     handler(textarea.value);
+//   } else alert("Enter prompt");
 // })

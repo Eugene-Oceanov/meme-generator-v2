@@ -40,23 +40,31 @@
         <div class="resize-trigger"></div>
     </div>
 
-    <div class="open-layers__btn open-modal__btn" title="Слои">
-        <img src="./assets/img/layers-icon.png" alt="open layers" class="open-modal__icon">
+    <div id="modals-overlay">
+        <div class="kandinsky-request-modal">
+            <textarea id="kandinsky-prompt-area" placeholder="Введите запрос..."></textarea>
+            <div class="kandinsky-styles-radios"></div>
+            <button id="kandinsky-request-btn">Сгенерировать</button>
+        </div>
     </div>
 
-    <div id="layers" class="modal">
-        <div class="close-modal-wrapper"><img src="./assets/img/close.png" alt="close"
-                class="close-modal-icon close-layers--btn"></div>
+    <div class="open-layers__btn open-panel__btn" title="Слои">
+        <img src="./assets/img/layers-icon.png" alt="open layers" class="open-panel__icon">
+    </div>
+
+    <div id="layers" class="panel">
+        <div class="close-panel-wrapper"><img src="./assets/img/close.png" alt="close"
+                class="close-panel-icon close-layers--btn"></div>
         <div class="layer-labels-wrapper"></div>
     </div>
 
-    <div class="open-settings__btn open-modal__btn" title="Настройки">
-        <img src="./assets/img/settings-icon.png" alt="open settings" class="open-modal__icon">
+    <div class="open-settings__btn open-panel__btn" title="Настройки">
+        <img src="./assets/img/settings-icon.png" alt="open settings" class="open-panel__icon">
     </div>
 
-    <div id="img-settings" class="modal">
-        <div class="close-modal-wrapper"><img src="./assets/img/close.png" alt="close"
-                class="close-modal-icon close-img-settings--btn"></div>
+    <div id="img-settings" class="panel">
+        <div class="close-panel-wrapper"><img src="./assets/img/close.png" alt="close"
+                class="close-panel-icon close-img-settings--btn"></div>
         <div class="settings-wrapper">
             <button class="settings__btn img-settings__remove-bg-btn">Удалить фон</button>
             <div class="img-settings-item settings-item">
@@ -171,14 +179,14 @@
         </div>
     </div>
 
-    <div id="text-settings" class="modal">
-        <div class="close-modal-wrapper"><img src="./assets/img/close.png" alt="close"
-                class="close-modal-icon close-text-settings--btn">
+    <div id="text-settings" class="panel">
+        <div class="close-panel-wrapper"><img src="./assets/img/close.png" alt="close"
+                class="close-panel-icon close-text-settings--btn">
         </div>
         <div class="settings-wrapper">
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Шрифт</p>
-                <select class="text-input text-settings__font-family-select" id="text-font-input">
+                <select class="text-input text-change-input" id="text-font-input">
                     <option value="Impact" style="font-family: Impact">Impact</option>
                     <option value="Lobster" style="font-family: Lobster">Lobster</option>
                     <option value="Streamster" style="font-family: Streamster">Streamster</option>
@@ -193,7 +201,7 @@
             </div>
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Размер</p>
-                <select class="text-input text-settings__font-size-select" id="text-font-size-input">
+                <select class="text-input text-change-input" id="text-font-size-input">
                     <option value="8">8</option>
                     <option value="12">12</option>
                     <option value="14">14</option>
@@ -210,22 +218,22 @@
             </div>
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Цвет</p>
-                <input type="color" class="text-input text-settings__color-input" id="text-color-input" value="#ffffff">
+                <input type="color" class="text-input text-single-input" id="text-color-input" value="#ffffff">
             </div>
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Обводка</p>
                 <div class="text-settings-input-group d-flex ai-center">
-                    <input type="checkbox" id="text-settings__stroke-checkbox" class="text-input" checked>
+                    <input type="checkbox" id="text-settings__stroke-checkbox" class="text-input text-change-input" checked>
                     <label for="text-settings__stroke-checkbox"></label>
-                    <input type="color" class="text-input text-settings__stroke-color-input" id="text-stroke-color-input">
+                    <input type="color" class="text-input text-single-input" id="text-stroke-color-input">
                 </div>
             </div>
             <div class="text-settings-item settings-item d-flex jc-space-between ai-center">
                 <p class="settings-item__title">Фон</p>
                 <div class="text-settings-input-group d-flex ai-center">
-                    <input type="checkbox" id="text-input text-settings__background-checkbox">
+                    <input type="checkbox" id="text-settings__background-checkbox" class="text-input text-change-input">
                     <label for="text-settings__background-checkbox"></label>
-                    <input type="color" class="text-settings__background-color-input" id="text-background-input" disabled>
+                    <input type="color" class="text-input text-single-input" id="text-background-input" disabled>
                 </div>
             </div>
             <div class="text-settings-item settings-item">
@@ -235,7 +243,7 @@
                     <span>180°</span>
                 </p>
                 <input type="range" min="-180" max="180" value="0"
-                    class="text-input styled-slider slider-progress text-rotate-input" id="text-rotate-input" step="1">
+                    class="text-input styled-slider slider-progress text-single-input" id="text-rotate-input" step="1">
             </div>
             <div class="text-settings-item settings-item">
                 <p class="text-settings-item__title settings-item__title d-flex jc-space-between">
@@ -243,8 +251,8 @@
                     Вращение по оси Х
                     <span>89°</span>
                 </p>
-                <input type="range" min="-180" max="180" value="0"
-                    class="text-input styled-slider slider-progress text-rotateX-input" id="text-rotate-input" step="1">
+                <input type="range" min="-80" max="80" value="0"
+                    class="text-input styled-slider slider-progress text-single-input" id="text-rotateX-input" step="1">
             </div>
         </div>
     </div>
