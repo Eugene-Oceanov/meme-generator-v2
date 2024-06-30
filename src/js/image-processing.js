@@ -1,4 +1,4 @@
-import { moveElement, getLabel } from "./library.js";
+    import { moveElement, getLabel } from "./library.js";
 
 let currentImg,
     filterInputsArr = [...document.querySelectorAll(".filter-input")],

@@ -14,14 +14,21 @@ import "./assets/img/close.png";
 import { resizeElement, sortLayersDnD, changeActiveLayer, deleteLayer, downloadCanvas } from "./js/library.js";
 import { getImgOutput, updateImgInputListeners } from "./js/image-processing.js";
 import { getTextOutput, updateTextInputListeners } from "./js/text-processing.js";
+import { getAiImgOutput, getGenerationStyles } from "./js/kandinsky.js";
 
 const workspace = document.querySelector("#workspace"),
+    preloaderOverlay = document.querySelector(".preloader-overlay"),
     canvas = document.querySelector(".output-canvas"),
     workspaceResizeTrigger = document.querySelector(".resize-trigger"),
     uploadImgInput = document.querySelector("#download-img-input"),
     addTextBtn = document.querySelector(".add-text-control"),
-    downloadCanvasBtn = document.querySelector(".download-canvas-control"),
+    addAiImgBtn = document.querySelector(".generate-image-control"),
+    modalOverlay = document.querySelector("#modals-overlay"),
+    promptInput = document.querySelector("#kandinsky-prompt-area"),
+    kandinskyStylesWrapper = document.querySelector(".kandinsky-styles-radios"),
+    generateImgBtn = document.querySelector("#kandinsky-request-btn"),
     clearCanvasBtn = document.querySelector(".clear-canvas-control"),
+    downloadCanvasBtn = document.querySelector(".download-canvas-control"),
     layersSettings = document.querySelector("#layers"),
     imgSettings = document.querySelector("#img-settings"),
     removeBackgroundBtn = document.querySelector(".img-settings__remove-bg-btn"),
@@ -29,7 +36,8 @@ const workspace = document.querySelector("#workspace"),
     layerLabelsWrapper = document.querySelector(".layer-labels-wrapper"),
     layers = new Array();
 let zCounter = 0,
-    currentLayer = null;
+    currentLayer = null,
+    currentKandinskyStyle = "UHD";
 
 window.addEventListener("keydown", (e) => {if(e.key === "Tab") e.preventDefault()});
 resizeElement(workspace, workspaceResizeTrigger);
@@ -70,6 +78,25 @@ uploadImgInput.addEventListener("input", (e) => {
 addTextBtn.addEventListener("click", () => {
     currentLayer = getTextOutput(layers, zCounter, currentLayer, layerLabelsWrapper);
     zCounter++;
+})
+
+addAiImgBtn.addEventListener("click", () => modalOverlay.style.display = "flex");
+modalOverlay.addEventListener("click", (e) => {
+    if(e.target === modalOverlay) modalOverlay.style.display = "none";
+    else return;
+})
+
+document.body.onload = async () => {
+    const styleRadioWrappersArr = await getGenerationStyles();
+    styleRadioWrappersArr.forEach(item => {
+        kandinskyStylesWrapper.append(item);
+        const styleRadio = item.querySelector(".style-radio");
+        styleRadio.addEventListener("change", () => currentKandinskyStyle = styleRadio.getAttribute("style"));
+    });
+}
+
+generateImgBtn.addEventListener("click", async () => {
+    currentLayer = await getAiImgOutput(layers, zCounter, currentLayer, layerLabelsWrapper, currentKandinskyStyle, promptInput.value, removeBackgroundBtn, modalOverlay, preloaderOverlay);
 })
 
 sortLayersDnD(layerLabelsWrapper, layers);
