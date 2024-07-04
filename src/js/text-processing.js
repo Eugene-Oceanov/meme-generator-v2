@@ -13,6 +13,10 @@ export function getTextOutput(layersArr, counter, currentLayer, layerLabelsWrapp
     for(let key in text.styleValues) if(text.styleValues.hasOwnProperty(key)) document.getElementById(key).value = text.styleValues[key];
     moveElement(text.output, workspace);
     layersArr.push(text);
+    text.output.oninput = () => {
+        if(!text.output.textContent) text.label.textContent = `Надпись #${text.layer}`;
+        text.label.textContent = text.output.textContent;
+    }
     return text;
 }
 

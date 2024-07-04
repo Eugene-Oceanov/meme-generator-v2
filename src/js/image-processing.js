@@ -1,4 +1,4 @@
-    import { moveElement, getLabel } from "./library.js";
+import { moveElement, getLabel } from "./library.js";
 
 let currentImg,
     filterInputsArr = [...document.querySelectorAll(".filter-input")],
@@ -12,13 +12,17 @@ export function getImgOutput(uploadImgInput, layersArr, counter, currentLayer, l
         img.output.src = URL.createObjectURL(file);
         layerLabelsWrapper.append(img.label);
         workspace.append(img.output);
-        setTimeout(() => { if (img.output.clientWidth > img.output.clientHeight) img.output.style.width = "100%";
-                           else img.output.style.height = "100%"}, 0 );
+        setTimeout(() => { if (img.output.clientWidth > img.output.clientHeight) {img.output.style.width = `${workspace.offsetWidth}px`;}
+                           else img.output.style.height = `${workspace.offsetHeight}px`;
+                           img.originalWidth = img.output.clientWidth;
+                        }, 0 );
         currentLayer = img;
         updateImgInputListeners(currentLayer, removeBackgroundBtn);
         for(let key in img.styleValues)  if(img.styleValues.hasOwnProperty(key)) document.getElementById(key).value = img.styleValues[key];
         moveElement(currentLayer.output, workspace);
         layersArr.push(img);
+        uploadImgInput.value = "";
+        console.log(img);
         return img;
     }
 }
@@ -35,7 +39,7 @@ function getImgLayout(counter, name) {
         label: getLabel(counter, name),
         type: "img",
         styleValues: {
-            "img-scale-input": 1,
+            "img-scale-input": 100,
             "img-rotate-input": 0,
             "img-rotateX-input": 0,
             "img-rotateY-input": 0,
@@ -70,7 +74,10 @@ function updateSingleImgInputs(e) {
     if(currentImg) {
         const input = e.target;
         switch(input.id) {
-            case "img-scale-input": return currentImg.output.style.scale = input.value;
+            case "img-scale-input": {
+                currentImg.output.style.width = `${currentImg.originalWidth / 100 * input.value}px`;
+                return currentImg.output.style.height = "auto";
+            }
             case "img-rotate-input": return currentImg.output.style.rotate = `${input.value}deg`;
             case "img-opacity-input": return currentImg.output.style.opacity = input.value;
         }

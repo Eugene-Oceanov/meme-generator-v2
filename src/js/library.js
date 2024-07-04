@@ -27,7 +27,7 @@ export function moveElement(element, parent) {
     });
 }
 
-export function resizeElement(element, trigger, inner) {
+export function resizeElement(element, trigger, statusBar) {
     let elementRect = element.getBoundingClientRect(),
         active = false;
     trigger.addEventListener("mousedown", (e) => {
@@ -41,10 +41,7 @@ export function resizeElement(element, trigger, inner) {
             let currentHeight = e.clientY - elementRect.y;
             element.style.width = `${currentWidth}px`;
             element.style.height = `${currentHeight}px`;
-            if (inner) {
-                inner.style.width = "100%";
-                inner.style.height = "100%";
-            }
+            if(statusBar) statusBar.textContent = `Ш:${currentWidth}, B:${currentHeight}`;
         }
     }
     document.addEventListener("mouseup", () => {
@@ -55,7 +52,7 @@ export function resizeElement(element, trigger, inner) {
 
 export function getLabel(counter, name) {
     const label = document.createElement("LABEL");
-    label.classList.add("layer-label", `label-${counter}`);
+    label.classList.add("layer-label");
     label.style.border = "4px solid #fff";
     label.setAttribute("draggable", true);
     label.setAttribute("for", `layer-${counter}`);
@@ -93,10 +90,11 @@ export function sortLayersDnD(labelsWrapper, layersArr) {
         layersArr.splice(dragOveredIndex, 0, draggedImg);
         labelsWrapper.innerHTML = "";
         layersArr.forEach(item => {
-            item.layer = layersArr.indexOf(item) + 1;
+            item.layer = layersArr.indexOf(item);
             labelsWrapper.append(item.label);
-            item.output.id = `layer-${layersArr.indexOf(item) + 1}`;
-            item.output.style.zIndex = layersArr.indexOf(item) + 1;
+            item.output.id = `layer-${layersArr.indexOf(item)}`;
+            item.output.style.zIndex = layersArr.indexOf(item);
+            item.label.setAttribute("for", `layer-${layersArr.indexOf(item)}`);
             item.label.style.marginTop = "2px";
         })
     })
@@ -119,7 +117,7 @@ export function deleteLayer(layers, e) {
         layer = document.getElementById(label.getAttribute("for")),
         index = label.getAttribute("layer-index");
     label.remove();
-    layer.remove()
+    layer.remove();
     layers.splice(index, 1);
 }
 

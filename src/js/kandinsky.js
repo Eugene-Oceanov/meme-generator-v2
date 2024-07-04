@@ -9,45 +9,49 @@ export async function getAiImgOutput(layersArr, counter, currentLayer, layerLabe
         const img = await getAiImgLayout(counter, style, prompt, preloaderOverlay);
         layerLabelsWrapper.append(img.label);
         workspace.append(img.output);
-        setTimeout(() => { if (img.output.clientWidth > img.output.clientHeight) img.output.style.width = "100%";
-                               else img.output.style.height = "100%"}, 0 );
+        setTimeout(() => { if (img.output.clientWidth > img.output.clientHeight) img.output.style.width = `${workspace.offsetWidth}px`;
+                               else img.output.style.height = `${workspace.offsetHeight}px`;
+                               img.originalWidth = img.output.clientWidth;
+                            }, 0 );
         currentLayer = img;
         updateImgInputListeners(currentLayer, removeBackgroundBtn);
         for(let key in img.styleValues)  if(img.styleValues.hasOwnProperty(key)) document.getElementById(key).value = img.styleValues[key];
         moveElement(currentLayer.output, workspace);
         layersArr.push(img);
         return img;
-    } else alert("Введите запрос")
+    } else alert("Введите запрос");
 }
 
 export async function getGenerationStyles() {
-    let request = await fetch("https://cdn.fusionbrain.ai/static/styles/api");
-    let response = await request.json();
-    const styleRadioWrappersArr = new Array();
-    response.forEach(item => {
-        const styleRadioWrapper = document.createElement("DIV");
-        styleRadioWrapper.classList.add("kandinsky-styles-radio-item-wrapper");
-        const styleRadio = document.createElement("INPUT");
-        styleRadio.id = `style-${item.name}`;
-        styleRadio.setAttribute("type", "radio");
-        styleRadio.setAttribute("name", "kandinsky-styles");
-        styleRadio.setAttribute("style", item.name);
-        styleRadio.classList.add("style-radio");
-        if(item.name === "UHD") styleRadio.checked = true;
-        const styleRadioLabel = document.createElement("LABEL");
-        styleRadioLabel.setAttribute("for", `style-${item.name}`);
-        styleRadioLabel.textContent = item.title;
-        styleRadioWrapper.append(styleRadio, styleRadioLabel);
-        styleRadioWrappersArr.push(styleRadioWrapper);
-    })
-    return styleRadioWrappersArr;
+    try {
+        let request = await fetch("https://cdn.fusionbrain.ai/static/styles/api");
+        let response = await request.json();
+        const styleRadioWrappersArr = new Array();
+        response.forEach(item => {
+            const styleRadioWrapper = document.createElement("DIV");
+            styleRadioWrapper.classList.add("kandinsky-styles-radio-item-wrapper");
+            const styleRadio = document.createElement("INPUT");
+            styleRadio.id = `style-${item.name}`;
+            styleRadio.setAttribute("type", "radio");
+            styleRadio.setAttribute("name", "kandinsky-styles");
+            styleRadio.setAttribute("style", item.name);
+            styleRadio.classList.add("style-radio");
+            if(item.name === "UHD") styleRadio.checked = true;
+            const styleRadioLabel = document.createElement("LABEL");
+            styleRadioLabel.setAttribute("for", `style-${item.name}`);
+            styleRadioLabel.textContent = item.title;
+            styleRadioWrapper.append(styleRadio, styleRadioLabel);
+            styleRadioWrappersArr.push(styleRadioWrapper);
+        })
+        return styleRadioWrappersArr;
+    } catch(error) { console.error(`Error: ${error}`); }
 }
 
 async function getAiImgLayout(counter, style, prompt, preloaderOverlay) {
     const url = 'https://api-key.fusionbrain.ai/';
     const apiKey = '57EDFB2E7674FB6ACC51C03408CC1EFF';
     const secretKey = '60320B67C5F39DD95D907D8A87BA8DA7';
-        try {
+    try {
         const modelId = await getModel(url, apiKey, secretKey);
         const uuid = await generateImage(url, apiKey, secretKey, style, prompt, modelId);
         const response = await checkGeneration(url, apiKey, secretKey, uuid);
@@ -63,7 +67,7 @@ async function getAiImgLayout(counter, style, prompt, preloaderOverlay) {
             label: getLabel(counter, prompt),
             type: "img",
             styleValues: {
-                "img-scale-input": 1,
+                "img-scale-input": 100,
                 "img-rotate-input": 0,
                 "img-rotateX-input": 0,
                 "img-rotateY-input": 0,
@@ -77,9 +81,7 @@ async function getAiImgLayout(counter, style, prompt, preloaderOverlay) {
                 "img-sepia-input": 0
             }
         }
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    } catch (error) { console.error(`Error: ${error}`); }
 }
 
 async function getModel(url, apiKey, secretKey) {
@@ -89,7 +91,7 @@ async function getModel(url, apiKey, secretKey) {
             'X-Key': 'Key ' + apiKey,
             'X-Secret': 'Secret ' + secretKey
         }
-    });
+    })
     const data = await response.json();
     return data[0].id;
 }
